@@ -5,12 +5,17 @@ import ttk
 import thread
 from time import sleep
 import datetime
+ip_hostname ="192.168.1.1"
+user = "user"
+passw = "password"
 def get_rssi():
-    shell = spur.SshShell(hostname="192.168.1.1", username="root", password="aton",load_system_host_keys="False",missing_host_key =spur.ssh.MissingHostKey.accept)
+    shell = spur.SshShell(hostname=ip_hostname, username=user, password=passw,load_system_host_keys="False",missing_host_key =spur.ssh.MissingHostKey.accept)
     spur.ssh.MissingHostKey.accept
     try: 
         result = shell.run(["comgt", "sig" ,"-d", "/dev/ttyUSB1"])
         result_string  = result.output
+        result_ip = shell.run(["wget", "-qO","- http://ipecho.net/plain", ";", "echo"])
+        rusult_ip_string = result_ip.output       
     except result.to_error():
         return 0
     if result_string[0] == 'S': 
@@ -24,7 +29,18 @@ def get_rssi():
         except ValueError:
             pass
     return 0
-
+def get_ip():
+    shell = spur.SshShell(hostname=ip_hostname, username=user, password=passw,load_system_host_keys="False",missing_host_key =spur.ssh.MissingHostKey.accept)
+    spur.ssh.MissingHostKey.accept
+    try: 
+        result_ip = shell.run(["wget", "-qO","- http://ipecho.net/plain", ";", "echo"])
+        rusult_ip_string = result_ip.output       
+    except result.to_error():
+        return "None"
+    except ValueError:
+         return "None"
+    return rusult_ip_string
+    
 top = Tkinter.Tk()
 top.geometry('210x100')
 top.title('3g signal strength')
@@ -36,6 +52,9 @@ pb.pack()
 time_value = Tkinter.StringVar()
 time_label = Tkinter.Label(top, textvariable = time_value)
 time_label.pack()
+ip_label_value = Tkinter.StringVar()
+ip_label = Tkinter.Label(top,textvariable = ip_label_value)
+ip_label.pack()
 signal_in_percent = 0
 def update_progress_bar():
 
@@ -45,6 +64,8 @@ def update_progress_bar():
     try:
         value.set("3g signal strength"+" %.2g" %(signal_in_percent)+"%")
         pb["value"]= signal_in_percent
+        ip = get_ip()
+        ip_label_value.set(ip)
     except UnboundLocalError:
         print "error"
     top.after(30000, update_progress_bar)
