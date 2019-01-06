@@ -6,4 +6,4 @@
 python get_signal3g.py 
 ```
 
-Please note, some users may expirience problems (inappropriate signal strength that is not changing) - this is due to the different outputs in the "comgt" function. Please adjust the line 20 playing with the numbers in brackets [15:17], [16:19] and so on.
+Please note, some users may experience problems (inappropriate signal strength that is not changing) - this is due to the different outputs in the "comgt" function. Please adjust the line 20 playing with the numbers in brackets [15:17], [16:19] and so on.
