@@ -17,9 +17,9 @@ def get_rssi():
     except result.to_error():
         return 0
     if result_string[0] == 'S': 
-        signal_str_val = result_string[15:17]
+        signal_str_val = result_string[16:20]
         try:
-            signal_in_percent = (int(signal_str_val)/31.0)*100
+            signal_in_percent = (float(signal_str_val.replace(',','.'))/31.0)*100
         # value.set("3g signal strength"+" %.2g" %(signal_in_percent)+"%")
         # pb["value"]= signal_in_percent
             print " %.2g" %(signal_in_percent)+"%"
